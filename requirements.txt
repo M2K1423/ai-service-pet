@@ -1,0 +1,20 @@
+# Agno Framework
+agno>=0.2.0
+
+# Google Gemini (MIỄN PHÍ)
+google-genai
+
+# MCP Support
+mcp
+
+# FastAPI Server
+fastapi[standard]>=0.115.0
+uvicorn[standard]>=0.32.0
+
+# MongoDB Database
+pymongo>=4.10.0
+motor>=3.6.0
+
+# Environment & Utils
+python-dotenv>=1.0.0
+pydantic>=2.0.0
