@@ -68,11 +68,16 @@ class BaseAgent(ABC):
             LLM response
         """
         from integrations.ai_models.ollama_client import OllamaClient
+        import os
         
-        # Use local Ollama - no API key needed!
-        ollama_client = OllamaClient(model="llama3.2")
+        # Get model from environment or use default
+        model_name = os.getenv("OLLAMA_MODEL", "deepseek-r1:1.5b")
+        
+        # Use local Ollama - no API key needed, no quota limits!
+        ollama_client = OllamaClient(model=model_name)
         
         try:
+            self.logger.info(f"🤖 Using Ollama model: {model_name}")
             response = await ollama_client.generate_response(
                 prompt=prompt,
                 system_prompt=system_prompt
