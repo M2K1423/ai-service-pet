@@ -28,17 +28,38 @@ async def handle_chat(
         ChatResponse with AI-generated reply
     """
     try:
-        logger.info(f"Chat request from user: {request.user_id}")
+        # ============================================
+        # LOG CHI TIẾT REQUEST TỪ CRM
+        # ============================================
+        logger.info("=" * 80)
+        logger.info("🔔 NHẬN REQUEST TỪ CRM")
+        logger.info("=" * 80)
+        logger.info(f"📨 User ID: {request.user_id}")
+        logger.info(f"💬 Message: {request.message}")
+        logger.info(f"📋 Session ID: {getattr(request, 'session_id', 'N/A')}")
+        logger.info(f"🔑 API Key: {api_key[:8]}...")
+        logger.info(f"📦 Context: {request.context}")
+        logger.info(f"🕐 Timestamp: {request.timestamp if hasattr(request, 'timestamp') else 'N/A'}")
+        logger.info("=" * 80)
         
         # Get or create agent manager
         agent_manager = AgentManager()
         
         # Process message through core layer
+        logger.info("🤖 Bắt đầu xử lý với AI Agent...")
         response = await agent_manager.process_message(
             user_id=request.user_id,
             message=request.message,
             context=request.context
         )
+        
+        logger.info("=" * 80)
+        logger.info("✅ TRẢ RESPONSE CHO CRM")
+        logger.info("=" * 80)
+        logger.info(f"💬 AI Response: {response.get('message', '')}")
+        logger.info(f"🤖 Agent Type: {response.get('agent_type', 'general')}")
+        logger.info(f"📊 Metadata: {response.get('metadata', {})}")
+        logger.info("=" * 80)
         
         return ChatResponse(
             user_id=request.user_id,
@@ -48,7 +69,14 @@ async def handle_chat(
         )
         
     except Exception as e:
-        logger.error(f"Error processing chat: {str(e)}")
+        logger.error("=" * 80)
+        logger.error("❌ LỖI KHI XỬ LÝ REQUEST TỪ CRM")
+        logger.error("=" * 80)
+        logger.error(f"🚨 Error: {str(e)}")
+        logger.error(f"📍 Error Type: {type(e).__name__}")
+        import traceback
+        logger.error(f"📋 Traceback:\n{traceback.format_exc()}")
+        logger.error("=" * 80)
         raise HTTPException(
             status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
             detail=f"Error processing message: {str(e)}"
