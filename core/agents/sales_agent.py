@@ -87,9 +87,12 @@ AI:"""
         price_keywords = [
             r'rẻ\s+nhất', r'giá\s+rẻ', r'giá\s+thấp',
             r'đắt\s+nhất', r'giá\s+cao', r'giá\s+đắt',
+            r'mắc\s+nhất', r'giá\s+mắc', r'đắt\s+tiền',
+            r'cao\s+cấp\s+nhất', r'sang\s+trọng\s+nhất',
             r'giá\s+tăng', r'giá\s+giảm',
             r'theo\s+giá', r'sắp\s+xếp.*giá',
-            r'từ\s+rẻ\s+đến\s+đắt', r'từ\s+đắt\s+đến\s+rẻ'
+            r'từ\s+rẻ\s+đến\s+đắt', r'từ\s+đắt\s+đến\s+rẻ',
+            r'từ\s+thấp\s+đến\s+cao', r'từ\s+cao\s+đến\s+thấp'
         ]
         message_lower = message.lower()
         return any(re.search(pattern, message_lower) for pattern in price_keywords)
@@ -142,7 +145,12 @@ AI:"""
     async def _fetch_products_by_price(self, message: str) -> Dict[str, Any]:
         """Fetch products sorted by price based on customer query."""
         # Determine sort order (ASC or DESC)
-        order = "DESC" if any(word in message.lower() for word in ['đắt', 'cao', 'giảm']) else "ASC"
+        # DESC: expensive first (đắt, mắc, cao, giảm dần)
+        # ASC: cheap first (rẻ, thấp, tăng dần)
+        expensive_keywords = ['đắt', 'mắc', 'cao', 'giảm', 'sang', 'cao cấp']
+        order = "DESC" if any(word in message.lower() for word in expensive_keywords) else "ASC"
+        
+        self.logger.info(f"🔍 Xác định thứ tự sắp xếp: {order} ({'giá giảm dần' if order == 'DESC' else 'giá tăng dần'})")
         
         try:
             products = await self.product_api.get_products_sorted(

@@ -21,6 +21,9 @@ def get_logger(name: str, level: Optional[int] = None) -> logging.Logger:
         # Set level
         logger.setLevel(level or logging.INFO)
         
+        # Prevent propagation to root logger
+        logger.propagate = False
+        
         # Create console handler
         handler = logging.StreamHandler(sys.stdout)
         handler.setLevel(level or logging.INFO)

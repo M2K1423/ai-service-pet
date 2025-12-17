@@ -4,6 +4,7 @@ from fastapi.middleware.cors import CORSMiddleware
 
 from gateway.routes import chat, webhook, health
 from gateway.middleware.logging import LoggingMiddleware
+from gateway.middleware.deduplication import RequestDeduplicationMiddleware
 from shared.logger import get_logger
 
 logger = get_logger(__name__)
@@ -24,12 +25,13 @@ app.add_middleware(
 )
 
 # Custom middleware
+app.add_middleware(RequestDeduplicationMiddleware, window_seconds=30)
 app.add_middleware(LoggingMiddleware)
 
 # Include routers
 app.include_router(health.router, prefix="/api/v1", tags=["Health"])
 app.include_router(chat.router, prefix="/api/v1", tags=["Chat"])
-app.include_router(webhook.router, prefix="/api/v1", tags=["Webhook"])
+# app.include_router(webhook.router, prefix="/api/v1", tags=["Webhook"])
 
 
 @app.on_event("startup")

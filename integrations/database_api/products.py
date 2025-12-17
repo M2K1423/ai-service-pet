@@ -135,7 +135,7 @@ class ProductAPI:
                 params["category"] = category
             
             logger.info("=" * 80)
-            logger.info(f"📊 GỌI API CRM DATABASE")
+            logger.info(f"📊 GỌI API CRM DATABASE - Sắp xếp theo {sort_by} ({order.upper()})")
             logger.info("=" * 80)
             logger.info(f"🔗 URL: {self.client.base_url}/{division}/products")
             logger.info(f"📋 Params: {params}")
@@ -163,6 +163,56 @@ class ProductAPI:
         except Exception as e:
             logger.error(f"❌ Lỗi khi lấy danh sách sản phẩm: {str(e)}")
             return {"items": [], "page": 1, "limit": limit, "total": 0}
+    
+    async def get_products_by_price_asc(
+        self,
+        division: str = "odeli",
+        limit: int = 10,
+        category: Optional[str] = None
+    ) -> Dict[str, Any]:
+        """
+        Get products sorted by price ascending (rẻ nhất).
+        
+        Args:
+            division: Division identifier
+            limit: Maximum products to return
+            category: Filter by category
+        
+        Returns:
+            Dict with items sorted by price ascending
+        """
+        return await self.get_products_sorted(
+            division=division,
+            sort_by="price",
+            order="ASC",
+            limit=limit,
+            category=category
+        )
+    
+    async def get_products_by_price_desc(
+        self,
+        division: str = "odeli",
+        limit: int = 10,
+        category: Optional[str] = None
+    ) -> Dict[str, Any]:
+        """
+        Get products sorted by price descending (đắt nhất).
+        
+        Args:
+            division: Division identifier
+            limit: Maximum products to return
+            category: Filter by category
+        
+        Returns:
+            Dict with items sorted by price descending
+        """
+        return await self.get_products_sorted(
+            division=division,
+            sort_by="price",
+            order="DESC",
+            limit=limit,
+            category=category
+        )
     
     async def get_product_detail(
         self,
