@@ -17,9 +17,7 @@ class Settings(BaseSettings):
     RATE_LIMIT_REQUESTS: int = 100
     RATE_LIMIT_WINDOW: int = 60
     
-    # Database settings
-    MONGODB_URL: str = "mongodb://localhost:27017"
-    MONGODB_DB_NAME: str = "ai_service"
+   
     
     # AI Model settings
     GOOGLE_API_KEY: Optional[str] = None

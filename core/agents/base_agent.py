@@ -68,9 +68,17 @@ class BaseAgent(ABC):
             LLM response
         """
         from integrations.ai_models.ollama_client import OllamaClient
+        import os
+        
+        # Get model from environment variable
+        model_name = os.getenv("OLLAMA_MODEL", "llama3.2")
         
         # Use local Ollama - no API key needed!
-        ollama_client = OllamaClient(model="llama3.2")
+        ollama_client = OllamaClient(model=model_name)
+        
+        self.logger.info("=" * 80)
+        self.logger.info(f"🤖 GỌI AI MODEL: {model_name.upper()}")
+        self.logger.info("=" * 80)
         
         try:
             response = await ollama_client.generate_response(
@@ -78,9 +86,15 @@ class BaseAgent(ABC):
                 system_prompt=system_prompt
             )
             await ollama_client.close()
+            
+            self.logger.info("=" * 80)
+            self.logger.info(f"✅ AI MODEL {model_name.upper()} ĐÃ TRẢ LỜI")
+            self.logger.info(f"📝 Response length: {len(response)} ký tự")
+            self.logger.info("=" * 80)
+            
             return response
         except Exception as e:
-            self.logger.error(f"Error calling LLM: {e}")
+            self.logger.error(f"❌ LỖI GỌI AI MODEL {model_name.upper()}: {e}")
             return f"Xin lỗi, tôi đang gặp sự cố kỹ thuật. Vui lòng thử lại sau."
     
     def format_context(self, context: Dict[str, Any]) -> str:
