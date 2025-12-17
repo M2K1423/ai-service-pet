@@ -1,100 +1,95 @@
-# AI Communication Service 🤖
+# Agno Multi-Agent System 🤖
 
-Dịch vụ AI chatbot đa kênh với kiến trúc 3 tầng (Gateway - Core - Integrations) để xử lý tin nhắn từ CRM và các kênh truyền thông.
+AI chatbot CRM với kiến trúc **Agno Framework** - đơn giản, mạnh mẽ, dễ mở rộng.
 
-## 🏗️ Kiến trúc
+## 🏗️ Kiến trúc Agno
 
 ```
+┌─────────────────────────────────────────────────────────┐
+│  AgentOS (Framework Layer)                              │
+│  ├─ Auto-generated FastAPI app                          │
+│  ├─ Built-in API docs (/docs)                           │
+│  └─ Agent orchestration                                 │
+└─────────────────────────────────────────────────────────┘
+                          ↓
+┌─────────────────────────────────────────────────────────┐
+│  Multi-Agent System                                     │
+│  ├─ 🛎️  Customer Service Agent                          │
+│  ├─ 💼 Sales Agent                                       │
+│  └─ 🔧 Technical Support Agent                           │
+└─────────────────────────────────────────────────────────┘
+                          ↓
+┌─────────────────────────────────────────────────────────┐
+│  Custom Tools (@tool decorator)                         │
+│  ├─ get_customer_info()                                 │
+│  ├─ search_products()                                   │
+│  ├─ get_all_products()                                  │
+│  ├─ get_categories()                                    │
+│  ├─ get_promotions()                                    │
+│  └─ get_order_status()                                  │
+└─────────────────────────────────────────────────────────┘
+                          ↓
+┌─────────────────────────────────────────────────────────┐
+│  External APIs (httpx async calls)                      │
+│  └─ CRM Database API (http://localhost:9000)            │
+└─────────────────────────────────────────────────────────┘
+
+**File structure:**
+```
+
 ai-service/
-│
-├── 🚪 gateway/                  # Layer 1: API Gateway
-│   ├── app.py                  # FastAPI application
-│   ├── routes/                 # API endpoints
-│   ├── middleware/             # Auth, rate limit, logging
-│   ├── schemas/                # Request/Response models
-│   └── utils/                  # Validators
-│
-├── 🧠 core/                     # Layer 2: Business Logic
-│   ├── agent_manager.py        # Quản lý agents
-│   ├── agents/                 # AI agents
-│   ├── processors/             # Message processing
-│   ├── memory/                 # Conversation memory
-│   └── config/                 # Settings & prompts
-│
-├── 🔌 integrations/             # Layer 3: External APIs
-│   ├── database_api/           # Database endpoints
-│   ├── ai_models/              # OpenAI, Claude, Gemini
-│   └── external_services/      # Zalo, Facebook APIs
-│
-├── 🔧 shared/                   # Shared utilities
-│   ├── exceptions.py
-│   ├── logger.py
-│   └── constants.py
-│
-├── 📊 data/                     # Runtime data
-│   └── conversations.db
-│
-├── 🧪 tests/                    # Unit tests
-│
-└── main.py                      # Entry point
-```
+├── agno_refactored.py # 🎯 Main file (350 lines)
+├── .env # Configuration
+├── requirements.txt # 5 dependencies
+└── README.md # This file
+
+````
 
 ## ✨ Tính năng
 
-- ✅ **Multi-Agent System**: Customer Service, Sales, Technical Support
-- ✅ **Intent Classification**: Tự động phân loại ý định khách hàng
-- ✅ **Conversation Memory**: Lưu trữ lịch sử hội thoại
-- ✅ **Multi-Channel**: Zalo, Facebook Messenger
-- ✅ **API Gateway**: Auth, rate limiting, logging
-- ✅ **Flexible AI Models**: Gemini (free), OpenAI, Claude
+- ✅ **3 Specialized Agents**: Customer Service, Sales, Technical Support
+- ✅ **Auto Agent Routing**: Keyword-based intent detection
+- ✅ **Built-in Memory**: Conversation history (10-15 messages)
+- ✅ **CRM Database Integration**: Products, categories, promotions
+- ✅ **Custom Tools**: @tool decorator for easy API integration
+- ✅ **Auto API Docs**: Swagger UI tự động
+- ✅ **Google Gemini**: Fast, free AI model
 
-## 🚀 Cài đặt
+## 🚀 Quickstart (5 phút)
 
-### 1. Clone và cài đặt dependencies
+### 1. Install dependencies
 
 ```bash
 pip install -r requirements.txt
-```
+````
 
-### 2. Cấu hình môi trường
-
-Tạo file `.env` từ template:
-
-```bash
-cp .env.example .env
-```
-
-Chỉnh sửa `.env` với các thông tin cần thiết:
+### 2. Configure `.env`
 
 ```env
-# Bắt buộc
 GOOGLE_API_KEY=your-google-api-key-here
-API_KEYS=your-api-key-1,your-api-key-2
-
-# Tùy chọn
-MONGODB_URL=mongodb://localhost:27017
-OPENAI_API_KEY=your-openai-key (optional)
-ANTHROPIC_API_KEY=your-claude-key (optional)
+API_KEYS=test-key-123,dev-key-456
+DATABASE_API_URL=http://localhost:9000
 ```
 
-### 3. Chạy ứng dụng
+### 3. Run service
 
 ```bash
-python main.py
+python agno_refactored.py
 ```
 
-Hoặc với uvicorn:
+🎉 Service chạy tại: http://localhost:8000
 
-```bash
-uvicorn main:app --reload --host 0.0.0.0 --port 8000
-```
+## 📖 API Endpoints
 
-## 📖 API Documentation
+### Auto-generated (Agno)
 
-Sau khi chạy ứng dụng, truy cập:
+- `GET  /docs` - Swagger UI
+- `POST /agents/{agent_name}/run` - Run specific agent
 
-- **API Docs**: http://localhost:8000/docs
-- **Health Check**: http://localhost:8000/api/v1/health
+### Custom endpoints
+
+- `POST /api/v1/chat` - Smart chat with auto agent selection
+- `GET  /api/v1/health` - Health check
 
 ## 🔐 API Usage
 
@@ -113,79 +108,99 @@ curl -X POST "http://localhost:8000/api/v1/chat" \
   }'
 ```
 
-### Response
+**Response:**
 
 ```json
 {
-  "user_id": "user_123",
+  "user_id": "user123",
   "message": "Chào anh/chị! Em có thể tư vấn sản phẩm cho anh/chị...",
-  "agent_type": "sales_agent",
-  "metadata": {
-    "intent": "product_inquiry",
-    "confidence": 0.95
-  },
-  "timestamp": "2025-12-14T10:30:00"
+  "agent_used": "Sales Agent",
+  "agent_type": "sales"
 }
+```
+
+## 🤖 Agents & Tools
+
+### Available Agents
+
+| Agent             | Intent Keywords                | Tools                                                             |
+| ----------------- | ------------------------------ | ----------------------------------------------------------------- |
+| Customer Service  | đơn hàng, giao hàng, khiếu nại | get_customer_info, get_order_status                               |
+| Sales             | sản phẩm, giá, mua, rẻ, đắt    | search_products, get_all_products, get_categories, get_promotions |
+| Technical Support | lỗi, bug, sự cố, hướng dẫn     | get_customer_info                                                 |
+
+### Custom Tools
+
+Tools được define bằng async functions và tự động integrate với agents:
+
+```python
+async def search_products(query: str = "", sort_by: str = "price") -> List[Dict]:
+    """Tìm kiếm sản phẩm theo giá."""
+    response = await http_client.get(f"{DATABASE_API_URL}/odeli/products")
+    return response.json()
 ```
 
 ## 🐳 Docker
 
-### Build image
-
 ```bash
-docker build -t ai-service:latest .
-```
+# Build
+docker build -t agno-multi-agent .
 
-### Run container
-
-```bash
-docker run -d \
-  -p 8000:8000 \
-  --env-file .env \
-  --name ai-service \
-  ai-service:latest
+# Run
+docker run -d -p 8000:8000 --env-file .env agno-multi-agent
 ```
 
 ## 🧪 Testing
 
 ```bash
-# Chạy tất cả tests
-pytest
+# Health check
+curl http://localhost:8000/api/v1/health
 
-# Với coverage
-pytest --cov=. --cov-report=html
+# Test sales agent
+curl -X POST http://localhost:8000/api/v1/chat \
+  -H "X-API-Key: test-key-123" \
+  -H "Content-Type: application/json" \
+  -d '{"user_id":"test","message":"sản phẩm rẻ nhất","session_id":"s1"}'
 
-# Chạy test cụ thể
-pytest tests/test_gateway/test_chat.py
+# Test customer service agent
+curl -X POST http://localhost:8000/api/v1/chat \
+  -H "X-API-Key: test-key-123" \
+  -d '{"user_id":"test","message":"kiểm tra đơn hàng","session_id":"s1"}'
 ```
 
-## 📝 Development
+## 📊 Comparison: Custom vs Agno
 
-### Code formatting
+| Aspect           | Custom (main branch)                | Agno (agno branch)    |
+| ---------------- | ----------------------------------- | --------------------- |
+| **Files**        | 45+ files                           | 1 file                |
+| **Lines**        | ~2000                               | ~350                  |
+| **Setup Time**   | 2-3 days                            | 5 minutes             |
+| **Architecture** | 3-layer (Gateway-Core-Integrations) | AgentOS framework     |
+| **Middleware**   | Custom (dedup, logging, rate limit) | None (basic)          |
+| **AI Model**     | Ollama (local, free)                | Gemini (cloud, quota) |
+| **Intent**       | Custom classifier                   | Keyword routing       |
+| **Memory**       | SessionManager                      | Built-in (10-15 msgs) |
+| **Control**      | Full control                        | Framework-based       |
+| **Maintenance**  | Custom code                         | Framework updates     |
 
-```bash
-black .
-```
+**Trade-offs:**
 
-### Linting
+- ✅ Agno: Nhanh, đơn giản, ít code
+- ❌ Agno: Mất control, mất Ollama, mất custom middleware
+- ✅ Custom: Full control, Ollama local, production features
+- ❌ Custom: Nhiều code, setup lâu, maintain phức tạp
 
-```bash
-flake8 .
-```
+## 🔄 Migration Guide
 
-### Type checking
+Xem [MIGRATION.md](MIGRATION.md) để biết chi tiết migrate từ custom architecture sang Agno.
 
-```bash
-mypy .
-```
+**Quick summary:**
 
-## 🤝 Contributing
-
-1. Fork repository
-2. Tạo feature branch (`git checkout -b feature/amazing-feature`)
-3. Commit changes (`git commit -m 'Add amazing feature'`)
-4. Push to branch (`git push origin feature/amazing-feature`)
-5. Tạo Pull Request
+1. Backup: `git checkout -b backup-custom`
+2. Create `agno_refactored.py` (1 file)
+3. Delete: gateway/, core/, integrations/, shared/, main.py
+4. Update: requirements.txt, .env, Dockerfile
+5. Test: python agno_refactored.py
 
 ## 📄 License
 
@@ -193,4 +208,5 @@ MIT License
 
 ## 📧 Contact
 
+GitHub: [your-username]
 Email: your-email@example.com

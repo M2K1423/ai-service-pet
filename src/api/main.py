@@ -8,7 +8,7 @@ from typing import Dict, Any
 from agno.os import AgentOS
 from fastapi import HTTPException, Header
 from pydantic import BaseModel
-from agents import customer_service_agent, sales_agent, tech_support_agent, SimpleRouter
+from src.core.agents import customer_service_agent, sales_agent, tech_support_agent, SimpleRouter
 
 # ============================================
 # AGENT OS SETUP
@@ -146,4 +146,4 @@ if __name__ == "__main__":
     print(f"   - {sales_agent.name}")
     print(f"   - {tech_support_agent.name}")
     print("=" * 80)
-    uvicorn.run("main:app", host="0.0.0.0", port=8000, reload=True)
+    uvicorn.run("src.api.main:app", host="0.0.0.0", port=8000, reload=True)
