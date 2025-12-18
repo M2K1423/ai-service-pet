@@ -9,11 +9,6 @@ from src.core.prompts import SALES_PROMPT
 from src.integrations.tools import (
     # Product tools
     search_products,
-    get_product_detail,
-    get_all_products,
-    # Category & Promotion tools
-    get_categories,
-    get_promotions
 )
 
 # ============================================
@@ -26,10 +21,6 @@ sales_agent = Agent(
     instructions=SALES_PROMPT,
     tools=[
         search_products,        # Tìm kiếm sản phẩm theo filters
-        get_product_detail,     # Xem chi tiết 1 sản phẩm
-        get_all_products,       # Lấy danh sách sản phẩm
-        get_categories,         # Lấy danh mục sản phẩm
-        get_promotions         # Lấy khuyến mãi hiện tại
     ],
     add_history_to_context=True,
     markdown=True,

@@ -6,46 +6,13 @@ Theo sơ đồ: AI Agent -> Store API (/odeli/products/xxx)
 from typing import Dict, Any, List, Optional
 import httpx
 from src.config.settings import settings
+from src.helpers.text_utils import clean_html, format_single_product, format_api_product_response
 
 # HTTP Client với retry và timeout
 http_client = httpx.AsyncClient(
     timeout=settings.HTTP_TIMEOUT,
     follow_redirects=True
 )
-
-async def get_customer_info(customer_id: str) -> Dict[str, Any]:
-    """
-    Lấy thông tin khách hàng từ Store API.
-    
-    Args:
-        customer_id: ID khách hàng
-        
-    Returns:
-        Dict với thông tin khách hàng
-    """
-    try:
-        url = settings.get_customer_url(customer_id)
-        print(f"👤 [TOOL] get_customer_info called")
-        print(f"   URL: {url}")
-        
-        response = await http_client.get(url)
-        response.raise_for_status()
-        result = response.json()
-        
-        print(f"   ✅ Response: {response.status_code}")
-        return result
-    except httpx.HTTPStatusError as e:
-        print(f"   ❌ HTTP Error: {e.response.status_code}")
-        return {
-            "customer_id": customer_id,
-            "error": f"Customer not found: {e.response.status_code}"
-        }
-    except Exception as e:
-        print(f"   ❌ Error: {e}")
-        return {
-            "customer_id": customer_id,
-            "error": str(e)
-        }
 
 async def search_products(
     query: str = "", 
@@ -174,13 +141,24 @@ async def search_products(
                 "sku": item.get("sku", "N/A"),
                 "name": item.get("name", "N/A"),
                 "price": item.get("price", 0),
-                "category": item.get("category", ""),
-                "description": item.get("shortDescription", "")[:150],
-                "stock": item.get("stock", 0),
-                "image_url": item.get("imageUrl", "")
+                "image": item.get("thumbnailSmall", ""),
+                "description": clean_html(item.get("description", "")),
+                "short_description": clean_html(item.get("shortDescription", "")),
+                "user_manual": clean_html(item.get("userManual", "")),
+                "storage_instructions": clean_html(item.get("storageInstructions", "")),
+                "category_id": item.get("categoryId", ""),
+                "tags": item.get("tags", [])
             })
         
-        print(f"   📋 Formatted {len(formatted_items)} items")
+        # Display full product information using text_utils formatter
+        print(f"   📋 Formatted {len(formatted_items)} items:")
+        print("\n" + "=" * 100)
+        for idx, product in enumerate(formatted_items, 1):
+            # Use format_single_product to display ALL information
+            full_info = format_single_product(product, idx)
+            print(full_info)
+            print("\n" + "-" * 100)
+        
         return formatted_items
         
     except httpx.HTTPStatusError as e:
@@ -189,257 +167,3 @@ async def search_products(
     except Exception as e:
         print(f"   ❌ Error: {e}")
         return []
-
-async def get_product_detail(sku: str) -> Dict[str, Any]:
-    """
-    Lấy chi tiết một sản phẩm.
-    
-    Args:
-        sku: Mã SKU của sản phẩm
-        
-    Returns:
-        Dict với thông tin chi tiết sản phẩm
-    """
-    try:
-        url = settings.get_product_url(sku)
-        print(f"📦 [TOOL] get_product_detail called")
-        print(f"   URL: {url}")
-        print(f"   SKU: {sku}")
-        
-        response = await http_client.get(url)
-        response.raise_for_status()
-        result = response.json()
-        
-        print(f"   ✅ Response: {response.status_code}")
-        
-        # Format detailed product info
-        product = {
-            "sku": result.get("sku", sku),
-            "name": result.get("name", "N/A"),
-            "price": result.get("price", 0),
-            "category": result.get("category", ""),
-            "description": result.get("description", ""),
-            "short_description": result.get("shortDescription", ""),
-            "stock": result.get("stock", 0),
-            "images": result.get("images", []),
-            "specifications": result.get("specifications", {}),
-            "rating": result.get("rating", 0),
-            "reviews_count": result.get("reviewsCount", 0)
-        }
-        
-        return product
-        
-    except httpx.HTTPStatusError as e:
-        print(f"   ❌ HTTP Error: {e.response.status_code}")
-        return {"sku": sku, "error": "Product not found"}
-    except Exception as e:
-        print(f"   ❌ Error: {e}")
-        return {"sku": sku, "error": str(e)}
-
-async def get_all_products(limit: int = 20) -> List[Dict]:
-    """
-    Lấy danh sách tất cả sản phẩm.
-    
-    Args:
-        limit: Số lượng sản phẩm tối đa
-        
-    Returns:
-        List sản phẩm
-    """
-    try:
-        url = settings.get_product_url()
-        print(f"📊 [TOOL] get_all_products called")
-        print(f"   URL: {url}")
-        print(f"   Limit: {limit}")
-        
-        response = await http_client.get(url, params={"limit": limit})
-        response.raise_for_status()
-        result = response.json()
-        
-        print(f"   ✅ Response: {response.status_code}")
-        
-        items = result.get("items", []) if isinstance(result, dict) else result
-        print(f"   📦 Items count: {len(items)}")
-        
-        formatted_items = []
-        for item in items:
-            formatted_items.append({
-                "sku": item.get("sku", "N/A"),
-                "name": item.get("name", "N/A"),
-                "price": item.get("price", 0),
-                "category": item.get("category", ""),
-                "description": item.get("shortDescription", "")[:100],
-                "stock": item.get("stock", 0)
-            })
-            
-        print(f"   📋 Formatted {len(formatted_items)} items")
-        return formatted_items
-        
-    except Exception as e:
-        print(f"   ❌ Error: {e}")
-        return []
-
-async def get_categories() -> List[Dict]:
-    """
-    Lấy danh sách danh mục sản phẩm từ Store API.
-    
-    Returns:
-        List các danh mục
-    """
-    try:
-        url = settings.get_category_url()
-        print(f"📁 [TOOL] get_categories called")
-        print(f"   URL: {url}")
-        
-        response = await http_client.get(url)
-        response.raise_for_status()
-        result = response.json()
-        
-        print(f"   ✅ Response: {response.status_code}")
-        
-        categories = result if isinstance(result, list) else result.get("items", [])
-        formatted = [
-            {
-                "id": cat.get("id", ""),
-                "name": cat.get("name", "N/A"),
-                "description": cat.get("description", ""),
-                "product_count": cat.get("productCount", 0)
-            } 
-            for cat in categories
-        ]
-        
-        print(f"   📋 Categories count: {len(formatted)}")
-        return formatted
-        
-    except Exception as e:
-        print(f"   ❌ Error: {e}")
-        return []
-
-async def get_promotions() -> List[Dict]:
-    """
-    Lấy danh sách khuyến mãi từ Store API.
-    
-    Returns:
-        List các chương trình khuyến mãi
-    """
-    try:
-        url = settings.get_promotion_url()
-        print(f"🎁 [TOOL] get_promotions called")
-        print(f"   URL: {url}")
-        
-        response = await http_client.get(url)
-        response.raise_for_status()
-        result = response.json()
-        
-        print(f"   ✅ Response: {response.status_code}")
-        
-        promotions = result if isinstance(result, list) else result.get("items", [])
-        formatted = [
-            {
-                "id": promo.get("id", ""),
-                "name": promo.get("name", "N/A"),
-                "description": promo.get("description", ""),
-                "discount": promo.get("discount", 0),
-                "start_date": promo.get("startDate", ""),
-                "end_date": promo.get("endDate", ""),
-                "applicable_products": promo.get("applicableProducts", [])
-            } 
-            for promo in promotions
-        ]
-        
-        print(f"   🎁 Promotions count: {len(formatted)}")
-        return formatted
-        
-    except Exception as e:
-        print(f"   ❌ Error: {e}")
-        return []
-
-async def get_order_status(order_id: str) -> Dict[str, Any]:
-    """
-    Kiểm tra trạng thái đơn hàng từ Store API.
-    
-    Args:
-        order_id: Mã đơn hàng
-        
-    Returns:
-        Dict với thông tin đơn hàng
-    """
-    try:
-        url = settings.get_order_url(order_id)
-        print(f"📋 [TOOL] get_order_status called")
-        print(f"   URL: {url}")
-        print(f"   Order ID: {order_id}")
-        
-        response = await http_client.get(url)
-        response.raise_for_status()
-        result = response.json()
-        
-        print(f"   ✅ Response: {response.status_code}")
-        
-        # Format order info
-        order = {
-            "order_id": result.get("orderId", order_id),
-            "status": result.get("status", "Unknown"),
-            "created_at": result.get("createdAt", ""),
-            "total_amount": result.get("totalAmount", 0),
-            "items": result.get("items", []),
-            "shipping_address": result.get("shippingAddress", {}),
-            "tracking_number": result.get("trackingNumber", ""),
-            "estimated_delivery": result.get("estimatedDelivery", "")
-        }
-        
-        return order
-        
-    except httpx.HTTPStatusError as e:
-        print(f"   ❌ HTTP Error: {e.response.status_code}")
-        return {
-            "order_id": order_id,
-            "error": f"Order not found: {e.response.status_code}"
-        }
-    except Exception as e:
-        print(f"   ❌ Error: {e}")
-        return {
-            "order_id": order_id,
-            "error": str(e)
-        }
-
-async def create_order(
-    customer_id: str,
-    items: List[Dict[str, Any]],
-    shipping_address: Dict[str, str]
-) -> Dict[str, Any]:
-    """
-    Tạo đơn hàng mới.
-    
-    Args:
-        customer_id: ID khách hàng
-        items: List sản phẩm [{sku, quantity}]
-        shipping_address: Địa chỉ giao hàng
-        
-    Returns:
-        Dict với thông tin đơn hàng mới
-    """
-    try:
-        url = settings.get_order_url()
-        print(f"📝 [TOOL] create_order called")
-        print(f"   URL: {url}")
-        
-        payload = {
-            "customerId": customer_id,
-            "items": items,
-            "shippingAddress": shipping_address
-        }
-        
-        response = await http_client.post(url, json=payload)
-        response.raise_for_status()
-        result = response.json()
-        
-        print(f"   ✅ Order created: {result.get('orderId')}")
-        return result
-        
-    except httpx.HTTPStatusError as e:
-        print(f"   ❌ HTTP Error: {e.response.status_code}")
-        return {"error": f"Failed to create order: {e.response.status_code}"}
-    except Exception as e:
-        print(f"   ❌ Error: {e}")
-        return {"error": str(e)}
