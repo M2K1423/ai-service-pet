@@ -81,15 +81,15 @@ AI:"""
         response = await self._call_llm(prompt, system_prompt)
         
         return response
-    
+
     def _is_price_query(self, message: str) -> bool:
+
         """Check if message is asking about products by price."""
         price_keywords = [
             r'rẻ\s+nhất', r'giá\s+rẻ', r'giá\s+thấp',
             r'đắt\s+nhất', r'giá\s+cao', r'giá\s+đắt',
             r'mắc\s+nhất', r'giá\s+mắc', r'đắt\s+tiền',
-            r'cao\s+cấp\s+nhất', r'sang\s+trọng\s+nhất',
-            r'giá\s+tăng', r'giá\s+giảm',
+            r'cao\s+cấp\s+nhất', r'giá\s+tăng', r'giá\s+giảm',
             r'theo\s+giá', r'sắp\s+xếp.*giá',
             r'từ\s+rẻ\s+đến\s+đắt', r'từ\s+đắt\s+đến\s+rẻ',
             r'từ\s+thấp\s+đến\s+cao', r'từ\s+cao\s+đến\s+thấp'
@@ -98,18 +98,17 @@ AI:"""
         return any(re.search(pattern, message_lower) for pattern in price_keywords)
     
     def _is_general_product_query(self, message: str) -> bool:
-        """Check if message is asking about products in general."""
+        """Check if message is asking about medicines in general."""
         general_keywords = [
-            r'có\s+(những\s+)?sản\s*phẩm\s+(gì|nào)',
-            r'xem\s+sản\s*phẩm',
-            r'giới\s*thiệu\s+(sản\s*phẩm|món)',
-            r'menu',
-            r'danh\s*sách\s+(sản\s*phẩm|món)',
-            r'bán\s+(gì|những\s+gì)',
-            r'có\s+(món|thức\s+ăn)\s+(gì|nào)',
-            r'tư\s*vấn\s+sản\s*phẩm',
-            r'sản\s*phẩm\s+nào',
-            r'món\s+ăn\s+(gì|nào)'
+            r'có\s+(những\s+)?thuốc\s+(gì|nào)',
+            r'xem\s+thuốc', r'kho\s+thuốc',
+            r'giới\s*thiệu\s+thuốc',
+            r'danh\s*sách\s+thuốc',
+            r'bán\s+thuốc',
+            r'tư\s*vấn\s+thuốc',
+            r'sản\s*phẩm\s+thuốc',
+            r'thuốc\s+thú\s+y',
+            r'kho\s+hàng\s+có\s+bao\s+nhiêu'
         ]
         message_lower = message.lower()
         return any(re.search(pattern, message_lower) for pattern in general_keywords)
@@ -123,30 +122,29 @@ AI:"""
             r'combo',
             r'khuyến\s*mại',
             r'sale',
-            r'discount',
-            r'chương\s*trình'
+            r'discount'
         ]
         message_lower = message.lower()
         return any(re.search(pattern, message_lower) for pattern in promotion_keywords)
     
     def _is_category_query(self, message: str) -> bool:
-        """Check if message is asking about categories."""
+        """Check if message is asking about clinic services."""
         category_keywords = [
-            r'danh\s*mục',
-            r'loại\s+(món|sản\s*phẩm)',
-            r'phân\s*loại',
-            r'category',
-            r'categories',
-            r'nhóm\s+(sản\s*phẩm|món)'
+            r'dịch\s*vụ',
+            r'khám\s+bệnh',
+            r'siêu\s+âm',
+            r'tiêm\s+phòng',
+            r'tẩy\s+giun',
+            r'chữa\s+trị',
+            r'phẫu\s+thuật',
+            r'bảng\s+giá',
+            r'khám\s+ở\s+đây'
         ]
         message_lower = message.lower()
         return any(re.search(pattern, message_lower) for pattern in category_keywords)
     
     async def _fetch_products_by_price(self, message: str) -> Dict[str, Any]:
-        """Fetch products sorted by price based on customer query."""
-        # Determine sort order (ASC or DESC)
-        # DESC: expensive first (đắt, mắc, cao, giảm dần)
-        # ASC: cheap first (rẻ, thấp, tăng dần)
+        """Fetch medicines sorted by price based on customer query."""
         expensive_keywords = ['đắt', 'mắc', 'cao', 'giảm', 'sang', 'cao cấp']
         order = "DESC" if any(word in message.lower() for word in expensive_keywords) else "ASC"
         
@@ -154,119 +152,108 @@ AI:"""
         
         try:
             products = await self.product_api.get_products_sorted(
-                division="odeli",
+                division="petcare",
                 sort_by="price",
                 order=order,
                 limit=10
             )
             return products
         except Exception as e:
-            self.logger.error(f"Error fetching products: {str(e)}")
+            self.logger.error(f"Error fetching medicines: {str(e)}")
             return {"items": [], "total": 0}
     
     async def _fetch_all_products(self, limit: int = 20) -> Dict[str, Any]:
-        """Fetch all products from system."""
+        """Fetch all medicines from PetCare."""
         try:
             products = await self.product_api.get_all_products(
-                division="odeli",
+                division="petcare",
                 limit=limit
             )
             return products
         except Exception as e:
-            self.logger.error(f"Error fetching all products: {str(e)}")
+            self.logger.error(f"Error fetching all medicines: {str(e)}")
             return {"items": [], "total": 0}
     
     def _format_product_data(self, products: Dict[str, Any]) -> str:
-        """Format product data for AI prompt."""
+        """Format medicine data for AI prompt."""
         if not products.get("items"):
-            return ""
+            return "\nKhông có thông tin thuốc thú y nào trong kho lúc này.\n"
         
         items = products["items"]
-        formatted = "\n=== DANH SÁCH SẢN PHẨM TỮ HỆ THỐNG ===\n\n"
+        formatted = "\n=== DANH SÁCH THUỐC THÚ Y TRONG KHO ===\n\n"
         
         for idx, item in enumerate(items[:10], 1):
             name = item.get("name", "Không rõ tên")
             price = item.get("price", 0)
-            desc = item.get("shortDescription", item.get("description", ""))[:200]
+            desc = item.get("description", "")[:200]
             sku = item.get("sku", "N/A")
+            unit = item.get("unit", "hộp/lọ")
+            stock = item.get("stock_quantity", 0)
             
-            # Xử lý giá = 0
             price_str = "Liên hệ để biết giá" if price == 0 else f"{price:,.0f}đ"
             
             formatted += f"{idx}. {name}\n"
-            formatted += f"   - Mã SP: {sku}\n"
-            formatted += f"   - Giá: {price_str}\n"
+            formatted += f"   - Mã thuốc: {sku}\n"
+            formatted += f"   - Giá: {price_str} / {unit}\n"
+            formatted += f"   - Tồn kho: {stock} {unit}\n"
             if desc:
-                formatted += f"   - Mô tả: {desc}\n"
+                formatted += f"   - Chỉ định/Mô tả: {desc}\n"
             formatted += "\n"
         
-        formatted += f"Tổng cộng: {products.get('total', 0)} sản phẩm trong hệ thống\n"
+        formatted += f"Tổng cộng: {products.get('total', 0)} thuốc thú y trong kho hàng\n"
         formatted += "===========================================\n"
         return formatted
     
     def _format_promotions(self, promotions: List[Dict[str, Any]]) -> str:
         """Format promotions data for AI prompt."""
-        if not promotions:
-            return ""
+        return ""
+    
+    def _format_categories(self, categories: List[Dict[str, Any]]) -> str:
+        """Format services data for AI prompt."""
+        if not categories:
+            return "\nHiện phòng khám chưa đăng ký bảng giá dịch vụ trực tuyến.\n"
         
-        formatted = "\n=== DANH SÁCH KHUYẾN MÃI & COMBO ===\n\n"
+        formatted = "\n=== BẢNG GIÁ DỊCH VỤ Y TẾ PHÒNG KHÁM ===\n\n"
         
-        for idx, promo in enumerate(promotions[:10], 1):
-            name = promo.get("name", "Không rõ tên")
-            desc = promo.get("description", "")[:200]
-            discount = promo.get("discount", 0)
+        for idx, ser in enumerate(categories, 1):
+            name = ser.get("name", "Dịch vụ khám")
+            price = ser.get("price", 0)
+            desc = ser.get("description", "")
+            duration = ser.get("duration_minutes", 30)
+            
+            price_str = "Liên hệ" if price == 0 else f"{price:,.0f}đ"
             
             formatted += f"{idx}. {name}\n"
-            if discount:
-                formatted += f"   - Giảm giá: {discount}%\n"
+            formatted += f"   - Giá dịch vụ: {price_str}\n"
+            formatted += f"   - Thời gian thực hiện: {duration} phút\n"
             if desc:
-                formatted += f"   - Mô tả: {desc}\n"
+                formatted += f"   - Mô tả chi tiết: {desc}\n"
             formatted += "\n"
         
         formatted += "===========================================\n"
         return formatted
     
-    def _format_categories(self, categories: List[Dict[str, Any]]) -> str:
-        """Format categories data for AI prompt."""
-        if not categories:
-            return ""
-        
-        formatted = "\n=== DANH MỤC SẢN PHẨM ===\n\n"
-        
-        for idx, cat in enumerate(categories, 1):
-            name = cat.get("name", "Không rõ tên")
-            desc = cat.get("description", "")
-            
-            formatted += f"{idx}. {name}\n"
-            if desc:
-                formatted += f"   - Mô tả: {desc}\n"
-        
-        formatted += "\n===========================================\n"
-        return formatted
-    
     def get_system_prompt(self) -> str:
-        """Get system prompt for sales."""
-        return """Bạn là một chuyên viên tư vấn bán hàng chuyên nghiệp.
-
+        """Get system prompt for SalesAgent in PetCare."""
+        return """Bạn là chuyên viên tư vấn Thuốc thú y & Dịch vụ y khoa của phòng khám PetCare.
+ 
 NHIỆM VỤ:
-- Tư vấn sản phẩm, dịch vụ phù hợp với nhu cầu
-- Giới thiệu tính năng, lợi ích sản phẩm
-- Hỗ trợ quy trình mua hàng
-
+- Tư vấn về các loại thuốc thú y đang có tại kho và các dịch vụ khám chữa bệnh của phòng khám PetCare.
+- Giới thiệu ưu điểm, công dụng, giá tiền của thuốc hoặc dịch vụ y khoa cho khách hàng.
+- Hướng dẫn và khuyên chủ nuôi mang thú cưng tới gặp bác sĩ thú y nếu có triệu chứng bệnh nặng.
+ 
 KỸ NĂNG:
-- Lắng nghe và hiểu nhu cầu
-- Tư vấn chuyên nghiệp, không áp đặt
-- Giải đáp thắc mắc về giá cả, khuyến mãi
-
+- Lắng nghe, thấu hiểu lo lắng của chủ nuôi.
+- Tư vấn chuyên nghiệp, dựa trên danh sách dữ liệu thực tế từ hệ thống.
+- Giải đáp thắc mắc về giá cả rõ ràng.
+ 
 PHONG CÁCH:
-- Nhiệt tình, tự tin
-- Tập trung vào giá trị cho khách hàng
-- Xây dựng mối quan hệ lâu dài
-
+- Yêu thương động vật, nhẹ nhàng, chuyên nghiệp.
+- Xưng hô "phòng khám" hoặc "em" và gọi khách hàng là "anh/chị" hoặc "bạn".
+ 
 **QUY TẮC QUAN TRỌNG:**
-1. Luôn xưng "em" và gọi khách hàng là "anh/chị"
-2. Đưa ra thông tin chính xác về sản phẩm
-3. Không quá khích về sản phẩm
-4. **KHI CÓ DANH SÁCH SẢN PHẨM: PHẢI LIỆT KÊ CỤ TH ít nhất 3-5 SẢN PHẨM ĐẦU TIÊN**
-5. Giới thiệu ngắn gọn tên sản phẩm, giá và ưu điểm nổi bật
-6. Hỏi khách hàng muốn biết thêm chi tiết sản phẩm nào"""
+1. Chỉ đưa ra thông tin chính xác về các thuốc và dịch vụ có sẵn trong cơ sở dữ liệu hệ thống được cung cấp.
+2. Không tự ý kê đơn thuốc mạnh hoặc chẩn đoán bừa bãi khi chưa có chỉ định của bác sĩ thú y.
+3. KHI CÓ DANH SÁCH THUỐC HOẶC DỊCH VỤ: Phải liệt kê cụ thể ít nhất 3-5 loại thuốc hoặc dịch vụ liên quan trực tiếp đến câu hỏi của khách hàng, kèm theo giá cả và mô tả ngắn gọn.
+4. Hỏi khách hàng xem có muốn biết thêm chi tiết về loại thuốc hay dịch vụ nào không."""
+

@@ -16,49 +16,28 @@ class CustomerAPI:
     
     async def get_customer(self, customer_id: str) -> Optional[Dict[str, Any]]:
         """
-        Get customer by ID.
+        Get customer and pet info by ID from PetCare.
         
         Args:
-            customer_id: Customer identifier
+            customer_id: Customer identifier (e.g. owner_1)
         
         Returns:
-            Customer data or None
+            Customer and pet data or None
         """
         try:
-            return await self.client.get(f"/customers/{customer_id}")
+            # PetCare endpoint: /api/ai-tools/customer-info/{id}
+            return await self.client.get(f"/api/ai-tools/customer-info/{customer_id}")
         except Exception as e:
-            logger.error(f"Error fetching customer: {str(e)}")
+            logger.error(f"Error fetching customer from PetCare: {str(e)}")
             return None
     
-    async def search_customers(self, query: str) -> list:
+    async def get_appointments(self, customer_id: str) -> list:
         """
-        Search customers.
-        
-        Args:
-            query: Search query
-        
-        Returns:
-            List of matching customers
+        Get customer appointments from PetCare.
         """
         try:
-            result = await self.client.get("/customers/search", params={"q": query})
-            return result.get("results", [])
+            result = await self.client.get(f"/api/ai-tools/appointments/{customer_id}")
+            return result.get("appointments", [])
         except Exception as e:
-            logger.error(f"Error searching customers: {str(e)}")
+            logger.error(f"Error fetching appointments: {str(e)}")
             return []
-    
-    async def create_customer(self, customer_data: Dict[str, Any]) -> Optional[Dict[str, Any]]:
-        """
-        Create new customer.
-        
-        Args:
-            customer_data: Customer information
-        
-        Returns:
-            Created customer data
-        """
-        try:
-            return await self.client.post("/customers", json_data=customer_data)
-        except Exception as e:
-            logger.error(f"Error creating customer: {str(e)}")
-            return None

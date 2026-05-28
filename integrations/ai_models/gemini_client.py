@@ -30,7 +30,8 @@ class GeminiClient:
             api_key=self.api_key,
             http_options={'api_version': 'v1beta'}
         )
-        self.model_name = "gemini-2.0-flash-exp"  # Latest experimental model
+        self.model_name = os.getenv("GEMINI_MODEL", "gemini-2.0-flash")
+
     
     async def generate_response(
         self,

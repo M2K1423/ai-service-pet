@@ -21,8 +21,10 @@ class DatabaseAPIClient:
         self.base_url = base_url.rstrip('/')
         self.api_key = api_key
         self.client = httpx.AsyncClient(
-            headers={"X-API-Key": api_key} if api_key else {}
+            headers={"X-API-Key": api_key} if api_key else {},
+            timeout=20.0
         )
+
     
     async def get(self, endpoint: str, params: Optional[Dict] = None) -> Dict[str, Any]:
         """
@@ -38,12 +40,16 @@ class DatabaseAPIClient:
         url = f"{self.base_url}/{endpoint.lstrip('/')}"
         
         try:
+            logger.info(f"🔗 DatabaseAPIClient GET: {url}")
             response = await self.client.get(url, params=params)
             response.raise_for_status()
             return response.json()
         except httpx.HTTPError as e:
-            logger.error(f"Database API error: {str(e)}")
+            import traceback
+            logger.error(f"Database API error calling {url}: {repr(e)}")
+            logger.error(f"Traceback: {traceback.format_exc()}")
             raise
+
     
     async def post(
         self,

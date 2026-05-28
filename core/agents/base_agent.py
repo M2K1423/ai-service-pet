@@ -67,35 +67,81 @@ class BaseAgent(ABC):
         Returns:
             LLM response
         """
-        from integrations.ai_models.ollama_client import OllamaClient
         import os
+        from core.config.settings import get_settings
         
-        # Get model from environment variable
-        model_name = os.getenv("OLLAMA_MODEL", "llama3.2")
-        
-        # Use local Ollama - no API key needed!
-        ollama_client = OllamaClient(model=model_name)
+        settings = get_settings()
+        # Get model type (e.g. gemini, openai, claude, ollama)
+        model_type = os.getenv("DEFAULT_AI_MODEL", settings.DEFAULT_AI_MODEL).lower()
         
         self.logger.info("=" * 80)
-        self.logger.info(f"🤖 GỌI AI MODEL: {model_name.upper()}")
+        self.logger.info(f"🤖 GỌI AI MODEL: {model_type.upper()}")
         self.logger.info("=" * 80)
         
         try:
-            response = await ollama_client.generate_response(
-                prompt=prompt,
-                system_prompt=system_prompt
-            )
-            await ollama_client.close()
-            
-            self.logger.info("=" * 80)
-            self.logger.info(f"✅ AI MODEL {model_name.upper()} ĐÃ TRẢ LỜI")
-            self.logger.info(f"📝 Response length: {len(response)} ký tự")
-            self.logger.info("=" * 80)
-            
-            return response
+            if model_type == "gemini":
+                from integrations.ai_models.gemini_client import GeminiClient
+                gemini_client = GeminiClient()
+                response = await gemini_client.generate_response(
+                    prompt=prompt,
+                    system_prompt=system_prompt
+                )
+                
+                self.logger.info("=" * 80)
+                self.logger.info(f"✅ AI MODEL GEMINI ĐÃ TRẢ LỜI")
+                self.logger.info(f"📝 Response length: {len(response)} ký tự")
+                self.logger.info("=" * 80)
+                return response
+                
+            elif model_type == "openai":
+                from integrations.ai_models.openai_client import OpenAIClient
+                openai_client = OpenAIClient()
+                response = await openai_client.generate_response(
+                    prompt=prompt,
+                    system_prompt=system_prompt
+                )
+                
+                self.logger.info("=" * 80)
+                self.logger.info(f"✅ AI MODEL OPENAI ĐÃ TRẢ LỜI")
+                self.logger.info(f"📝 Response length: {len(response)} ký tự")
+                self.logger.info("=" * 80)
+                return response
+                
+            elif model_type == "claude":
+                from integrations.ai_models.claude_client import ClaudeClient
+                claude_client = ClaudeClient()
+                response = await claude_client.generate_response(
+                    prompt=prompt,
+                    system_prompt=system_prompt
+                )
+                
+                self.logger.info("=" * 80)
+                self.logger.info(f"✅ AI MODEL CLAUDE ĐÃ TRẢ LỜI")
+                self.logger.info(f"📝 Response length: {len(response)} ký tự")
+                self.logger.info("=" * 80)
+                return response
+                
+            else: # ollama
+                from integrations.ai_models.ollama_client import OllamaClient
+                model_name = os.getenv("OLLAMA_MODEL", "llama3.2")
+                ollama_client = OllamaClient(model=model_name)
+                
+                response = await ollama_client.generate_response(
+                    prompt=prompt,
+                    system_prompt=system_prompt
+                )
+                await ollama_client.close()
+                
+                self.logger.info("=" * 80)
+                self.logger.info(f"✅ AI MODEL OLLAMA ({model_name.upper()}) ĐÃ TRẢ LỜI")
+                self.logger.info(f"📝 Response length: {len(response)} ký tự")
+                self.logger.info("=" * 80)
+                return response
+                
         except Exception as e:
-            self.logger.error(f"❌ LỖI GỌI AI MODEL {model_name.upper()}: {e}")
+            self.logger.error(f"❌ LỖI GỌI AI MODEL {model_type.upper()}: {e}")
             return f"Xin lỗi, tôi đang gặp sự cố kỹ thuật. Vui lòng thử lại sau."
+
     
     def format_context(self, context: Dict[str, Any]) -> str:
         """
