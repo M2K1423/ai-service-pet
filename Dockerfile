@@ -26,9 +26,8 @@ RUN mkdir -p /app/data
 # Expose port
 EXPOSE 8000
 
-# Health check
 HEALTHCHECK --interval=30s --timeout=10s --start-period=5s --retries=3 \
-    CMD python -c "import requests; requests.get('http://localhost:8000/api/v1/health')"
+    CMD python -c "import os, requests; port = os.getenv('PORT', '8000'); requests.get(f'http://localhost:{port}/api/v1/health')"
 
 # Run application
 CMD ["python", "main.py"]
