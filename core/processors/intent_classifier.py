@@ -16,6 +16,7 @@ class IntentClassifier:
             "order_status": ["đơn hàng", "order", "giao hàng", "vận chuyển"],
             "complaint": ["khiếu nại", "phàn nàn", "không hài lòng", "tệ"],
             "technical_issue": ["lỗi", "không hoạt động", "bug", "sự cố"],
+            "pet_diagnosis": ["nôn", "tiêu chảy", "sốt", "bỏ ăn", "co giật", "khó thở", "ho", "mệt mỏi", "rụng lông", "đau", "bệnh", "chuẩn đoán", "triệu chứng", "chẩn đoán"],
         }
     
     async def classify(self, message: str) -> Dict[str, Any]:

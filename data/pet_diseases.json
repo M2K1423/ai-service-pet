@@ -1,0 +1,109 @@
+[
+  {
+    "id": "dog_parvovirus",
+    "name": "Bệnh Parvovirus ở Chó (Bệnh Parvo)",
+    "pet_type": "Chó",
+    "symptoms": [
+      "Nôn mửa liên tục, nôn ra bọt vàng hoặc bọt trắng",
+      "Tiêu chảy nặng, phân có lẫn máu tươi hoặc màu hồng sẫm, mùi tanh hôi đặc trưng",
+      "Mất nước trầm trọng, mắt trũng sâu, da kém đàn hồi",
+      "Mệt mỏi, lờ đờ, nằm một chỗ, không muốn di chuyển",
+      "Sốt cao từ 39.5 đến 41 độ C, sau đó có thể hạ thân nhiệt đột ngột",
+      "Bỏ ăn hoàn toàn, không uống nước"
+    ],
+    "causes": "Do Canine Parvovirus (CPV) gây ra, lây lan cực kỳ nhanh qua đường tiêu hóa do tiếp xúc trực tiếp hoặc gián tiếp với phân, chất nôn của chó bệnh.",
+    "danger_level": "Rất cao (Nguy kịch, có thể tử vong trong 24-72 giờ nếu không điều trị kịp thời)",
+    "first_aid": "1. Cách ly chó bệnh ngay lập tức khỏi các thú cưng khác.\n2. Ngừng cho ăn uống hoàn toàn để ruột được nghỉ ngơi (tránh kích thích nôn mửa).\n3. Nếu chó nôn nhiều, tuyệt đối không bơm nước hay sữa vào miệng.\n4. Bù nước điện giải bằng cách truyền dịch (cần bác sĩ thú y) hoặc nếu chưa thể đi khám, có thể pha dung dịch Oresol ấm xi-lanh bơm cực kỳ chậm vào mép miệng với lượng rất nhỏ nếu chó không nôn.\n5. Giữ ấm cho chó bằng chăn hoặc đèn sưởi.",
+    "treatment": "Cần đưa ngay đến phòng khám thú y để:\n- Truyền dịch tĩnh mạch (Ringer Lactate, Glucose) để bù nước và điện giải.\n- Sử dụng kháng sinh phổ rộng để chống nhiễm trùng thứ phát.\n- Sử dụng thuốc cầm nôn, thuốc bổ trợ (Vitamin C, B12, Anagin).\n- Tiêm kháng huyết thanh Parvo ở giai đoạn đầu nếu có điều kiện.",
+    "prevention": "Tiêm vắc-xin định kỳ (mũi 5 trong 1 hoặc 7 trong 1) đầy đủ cho chó từ 6-8 tuần tuổi. Vệ sinh tiêu độc khử trùng môi trường sống bằng dung dịch Cloramin B hoặc thuốc tẩy Javel."
+  },
+  {
+    "id": "dog_distemper",
+    "name": "Bệnh Carré ở Chó (Canine Distemper)",
+    "pet_type": "Chó",
+    "symptoms": [
+      "Sốt cao lặp đi lặp lại (sốt 2 đợt)",
+      "Chảy nước mắt, nước mũi đặc màu xanh hoặc vàng, ho khan chuyển sang ho có đờm",
+      "Viêm phổi, thở khó, thở khò khè",
+      "Tiêu chảy phân loãng màu cà phê, có mùi hôi tanh, có thể lẫn máu",
+      "Mụn mủ dưới bụng và bẹn, gan bàn chân và mũi bị sừng hóa (chai cứng)",
+      "Triệu chứng thần kinh: co giật cơ mặt, giật cơ chân, đi loạng choạng, chảy nước dãi, động kinh"
+    ],
+    "causes": "Do Canine Distemper Virus (CDV) gây ra, lây qua đường hô hấp (hít phải giọt bắn của chó bệnh) hoặc tiếp xúc dịch tiết.",
+    "danger_level": "Rất cao (Tỷ lệ tử vong lên tới 80-90% ở chó con, dễ để lại di chứng thần kinh vĩnh viễn)",
+    "first_aid": "1. Cách ly hoàn toàn ở nơi khô ráo, tránh gió lùa và ánh sáng mạnh (chó bệnh thường bị sợ ánh sáng).\n2. Lau sạch dịch tiết ở mắt, mũi bằng bông ẩm sạch.\n3. Bù nước điện giải Oresol bằng xi-lanh nhỏ giọt nếu chó không nôn mửa.\n4. Cho ăn thức ăn mềm, dễ tiêu hóa như cháo loãng nấu thịt băm nếu chó còn có khả năng ăn.\n5. Đưa ngay tới cơ sở thú y.",
+    "treatment": "Chưa có thuốc đặc trị, chủ yếu là điều trị triệu chứng:\n- Truyền dịch bù nước, nâng cao sức đề kháng.\n- Sử dụng kháng sinh kháng viêm đường hô hấp và tiêu hóa.\n- Sử dụng thuốc giảm ho, thuốc chống co giật (nếu có triệu chứng thần kinh).\n- Sử dụng kháng huyết thanh trị bệnh Carré ở giai đoạn đầu.",
+    "prevention": "Tiêm chủng vắc-xin phòng bệnh đầy đủ (mũi 5 trong 1 hoặc 7 trong 1). Hạn chế cho chó con chưa tiêm phòng tiếp xúc với nguồn bệnh bên ngoài."
+  },
+  {
+    "id": "rabies",
+    "name": "Bệnh Dại (Rabies)",
+    "pet_type": "Chó, Mèo",
+    "symptoms": [
+      "Thay đổi tính tình đột ngột: con vật hiền lành trở nên dữ tợn, hoặc con vật tinh nghịch trở nên lầm lì, sợ hãi",
+      "Sợ nước, sợ gió, sợ ánh sáng trực tiếp",
+      "Chảy nhiều nước dãi, sùi bọt mép, hàm dưới trễ xuống không khép lại được",
+      "Cắn xé điên cuồng các vật xung quanh hoặc tự cắn xé bản thân",
+      "Liệt các cơ, đặc biệt là cơ nuốt làm tiếng kêu khàn đi hoặc mất giọng",
+      "Đi đứng lảo đảo, liệt hai chân sau và liệt toàn thân rồi tử vong"
+    ],
+    "causes": "Do Rabies Lyssavirus gây ra, lây truyền chủ yếu qua vết cắn, vết cào hoặc tiếp xúc nước bọt của con vật bị bệnh dại vào vết thương hở.",
+    "danger_level": "Cực kỳ nguy hiểm (Tử vong 100% khi đã phát bệnh, có thể lây sang người gây tử vong)",
+    "first_aid": "⚠️ Chú ý cực kỳ quan trọng:\n1. Không được cố gắng tự điều trị hoặc ôm ấp con vật nghi dại.\n2. Nhốt riêng biệt con vật vào lồng sắt chắc chắn để theo dõi y tế.\n3. Nếu người bị cắn/cào: Rửa vết thương ngay lập tức dưới vòi nước chảy với xà phòng trong ít nhất 15 phút, sát trùng bằng cồn 70 độ hoặc cồn i-ốt, sau đó đến ngay trung tâm y tế dự phòng để tiêm vắc-xin ngừa dại và huyết thanh kháng dại khẩn cấp.",
+    "treatment": "Không có phương pháp điều trị y khoa nào cho động vật đã phát bệnh dại. Động vật phát bệnh dại bắt buộc phải được tiêu hủy theo quy định pháp luật để phòng tránh lây lan.",
+    "prevention": "Tiêm vắc-xin phòng bệnh dại định kỳ hàng năm cho chó, mèo từ 3 tháng tuổi trở lên. Rọ mõm chó khi ra đường và không thả rông vật nuôi."
+  },
+  {
+    "id": "dog_gastritis",
+    "name": "Bệnh Viêm Dạ Dày Ruột ở Chó (Gastritis / Gastroenteritis)",
+    "pet_type": "Chó",
+    "symptoms": [
+      "Nôn ra thức ăn chưa tiêu, sau đó nôn ra dịch mật màu vàng hoặc xanh",
+      "Tiêu chảy phân lỏng, có thể có màu đen hoặc lẫn ít máu, mùi hôi",
+      "Đau bụng: chó nằm áp bụng xuống đất, lưng cong lên, rên rỉ khi chạm vào bụng",
+      "Bỏ ăn, chán ăn, chỉ thích uống nước nhưng uống vào lại nôn ra",
+      "Lờ đờ, mất nước nhẹ đến trung bình"
+    ],
+    "causes": "Do ăn phải thức ăn ôi thiu, dị vật, thay đổi thức ăn đột ngột, nhiễm giun sán nặng, hoặc do nhiễm vi khuẩn (E. coli, Salmonella).",
+    "danger_level": "Trung bình (Có thể tự khỏi hoặc tiến triển nặng nếu không điều trị đúng cách)",
+    "first_aid": "1. Cho chó nhịn ăn trong vòng 12 - 24 giờ để dạ dày hồi phục.\n2. Cung cấp nước uống sạch với lượng nhỏ, chia làm nhiều lần trong ngày. Không cho uống quá nhiều một lúc.\n3. Có thể cho uống nước men tiêu hóa hoặc nước Oresol để bù điện giải.\n4. Sau thời gian nhịn ăn, cho ăn lại thức ăn nhạt, dễ tiêu như cháo gà nấu với ít muối, chia nhỏ làm 4-5 bữa.",
+    "treatment": "Nếu các triệu chứng kéo dài quá 24 giờ hoặc chó nôn liên tục:\n- Đưa đến bác sĩ thú y để tiêm thuốc chống nôn (Maropitant hoặc Metoclopramide).\n- Sử dụng dịch truyền tĩnh mạch hoặc dưới da nếu mất nước.\n- Sử dụng kháng sinh đường ruột (Metronidazole, Amoxicillin) nếu có dấu hiệu nhiễm khuẩn.\n- Sử dụng men vi sinh và gel bảo vệ niêm mạc dạ dày.",
+    "prevention": "Cho ăn thức ăn sạch, chín, không cho ăn xương dăm, thức ăn thừa của người. Tẩy giun định kỳ 3-6 tháng một lần."
+  },
+  {
+    "id": "cat_panleukopenia",
+    "name": "Bệnh Giảm Bạch Cầu ở Mèo (Bệnh Care Mèo / Panleukopenia)",
+    "pet_type": "Mèo",
+    "symptoms": [
+      "Nôn mửa dữ dội, nôn ra dịch nhớt màu vàng hoặc trắng",
+      "Tiêu chảy phân lỏng, chuyển nhanh sang phân có lẫn máu, mùi hôi tanh nồng nặc",
+      "Sốt cao 40 - 41 độ C đột ngột, sau đó hạ thân nhiệt dưới 38 độ C (dấu hiệu tiên lượng xấu)",
+      "Mèo ngồi im một chỗ, đầu gục xuống bát nước nhưng không uống, đi đứng lảo đảo",
+      "Mất nước nghiêm trọng, lông xơ xác, da mất độ đàn hồi",
+      "Bỏ ăn hoàn toàn, lờ đờ, không phản ứng với tiếng động"
+    ],
+    "causes": "Do Feline Parvovirus (FPV) gây ra. Virus tấn công các tế bào phân chia nhanh (đặc biệt là tủy xương và niêm mạc ruột), làm sụt giảm nghiêm trọng tế bào bạch cầu.",
+    "danger_level": "Rất cao (Tỷ lệ tử vong ở mèo con lên đến 90%, lây lan nhanh chóng mặt)",
+    "first_aid": "1. Cách ly mèo bệnh triệt để khỏi các con mèo khác trong nhà.\n2. Ngừng cho ăn uống hoàn toàn để hạn chế nôn mửa gây mất nước thêm.\n3. Giữ ấm cho mèo bằng đèn sưởi hoặc túi chườm ấm.\n4. Tuyệt đối không tự ý cho uống thuốc kháng sinh hoặc thuốc hạ sốt của người (đặc biệt là Paracetamol cực độc với mèo).\n5. Đưa ngay tới bệnh viện thú y.",
+    "treatment": "Cần can thiệp y khoa thú y khẩn cấp:\n- Truyền dịch tĩnh mạch để bù nước, điện giải và bổ sung đường huyết.\n- Tiêm kháng huyết thanh FPV ở giai đoạn sớm.\n- Sử dụng kháng sinh phổ rộng chống nhiễm trùng thứ phát.\n- Tiêm thuốc kích bạch cầu (nếu chỉ số bạch cầu quá thấp).\n- Thuốc cầm nôn, giảm đau đường ruột và các vitamin bổ trợ.",
+    "prevention": "Tiêm vắc-xin phòng bệnh định kỳ (mũi vắc-xin 3 trong 1 hoặc 4 trong 1) từ 8 tuần tuổi. Vệ sinh sát trùng chuồng nuôi bằng dung dịch chuyên dụng."
+  },
+  {
+    "id": "cat_calicivirus",
+    "name": "Bệnh Viêm Đường Hô Hấp ở Mèo (Feline Calicivirus - FCV)",
+    "pet_type": "Mèo",
+    "symptoms": [
+      "Loét miệng, loét lưỡi, loét nướu, khiến mèo đau đớn, chảy nhiều nước dãi, bỏ ăn",
+      "Chảy nước mắt, nước mũi liên tục, hắt hơi nhiều, nước mũi đặc dần màu vàng hoặc xanh",
+      "Sốt nhẹ đến trung bình",
+      "Khó thở, thở khò khè, ho",
+      "Có thể gây viêm khớp làm mèo đi khập khiễng, đau nhức các khớp xương",
+      "Lờ đờ, giảm vận động"
+    ],
+    "causes": "Do Feline Calicivirus (FCV) gây ra, lây qua dịch tiết đường hô hấp, nước bọt khi mèo tiếp xúc trực tiếp với nhau hoặc qua đồ dùng chung.",
+    "danger_level": "Trung bình đến Cao (Có thể gây viêm phổi cấp tử vong ở mèo con, hoặc loét miệng gây suy kiệt)",
+    "first_aid": "1. Cách ly mèo bệnh ra khu vực riêng khô ráo, ấm áp.\n2. Lau sạch mắt, mũi hàng ngày bằng nước muối sinh lý ấm.\n3. Cho ăn thức ăn mềm, nhuyễn, thơm và ấm (như pate hâm nóng) để kích thích khứu giác và giúp mèo nuốt dễ dàng hơn dù bị đau miệng.\n4. Giữ vệ sinh bát ăn, bát nước sạch sẽ.",
+    "treatment": "Điều trị triệu chứng và chăm sóc tích cực:\n- Sử dụng thuốc giảm đau kháng viêm để mèo bớt đau loét miệng và có thể ăn uống.\n- Dùng kháng sinh chống nhiễm trùng đường hô hấp thứ phát.\n- Nhỏ mắt, nhỏ mũi chuyên dụng cho thú y.\n- Khí dung (xông mũi) nếu mèo bị nghẹt mũi nặng.\n- Truyền dịch bổ sung dinh dưỡng nếu mèo bỏ ăn dài ngày.",
+    "prevention": "Tiêm phòng vắc-xin đầy đủ định kỳ hàng năm cho mèo từ 8 tuần tuổi."
+  }
+]

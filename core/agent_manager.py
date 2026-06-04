@@ -4,6 +4,7 @@ from typing import Dict, Any, Optional
 from core.agents.customer_service_agent import CustomerServiceAgent
 from core.agents.sales_agent import SalesAgent
 from core.agents.technical_support_agent import TechnicalSupportAgent
+from core.agents.pet_diagnosis_agent import PetDiagnosisAgent
 from core.processors.intent_classifier import IntentClassifier
 from core.processors.context_builder import ContextBuilder
 from core.memory.session_manager import SessionManager
@@ -21,6 +22,7 @@ class AgentManager:
             "customer_service": CustomerServiceAgent(),
             "sales": SalesAgent(),
             "technical_support": TechnicalSupportAgent(),
+            "pet_diagnosis": PetDiagnosisAgent(),
         }
         self.intent_classifier = IntentClassifier()
         self.context_builder = ContextBuilder()
@@ -120,6 +122,7 @@ class AgentManager:
             "order_status": "customer_service",
             "complaint": "customer_service",
             "technical_issue": "technical_support",
+            "pet_diagnosis": "pet_diagnosis",
             "general": "customer_service",
         }
         

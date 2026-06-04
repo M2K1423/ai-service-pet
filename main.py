@@ -22,10 +22,10 @@ def main():
     logger.info(f"🔗 Health Check: http://localhost:{port}/api/v1/health")
     
     uvicorn.run(
-        "gateway.app:app",
+        "main:app",
         host="0.0.0.0",
         port=port,
-        reload=False,
+        reload=True,
         log_level="info"
     )
 

@@ -42,3 +42,7 @@ mypy>=1.0.0
 
 # Utilities
 python-multipart>=0.0.6    # For file uploads
+lancedb>=0.33.0            # For Agno Knowledge Base vector DB
+tantivy>=0.26.0            # For text index searching in LanceDB
+pandas>=2.2.0              # Required for Agno knowledge and LanceDB integration
+
